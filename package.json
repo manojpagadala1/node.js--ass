@@ -10,9 +10,13 @@
     "start": "node server/index.js",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test",
+    "migrate:sqlite": "node scripts/migrate-sqlite-to-neon.js"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "@vercel/blob": "^2.8.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
     "concurrently": "^10.0.5",

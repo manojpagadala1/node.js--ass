@@ -28,3 +28,5 @@ server/uploads/
 *.njsproj
 *.sln
 *.sw?
+
+.vercel/

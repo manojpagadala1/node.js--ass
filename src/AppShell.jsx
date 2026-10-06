@@ -5,6 +5,7 @@ import {
   LayoutDashboard, LogOut, Menu, MoreHorizontal, Plus, Search, Settings2,
   Users, X,
 } from 'lucide-react'
+import { upload as uploadBlob } from '@vercel/blob/client'
 import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
@@ -110,9 +111,23 @@ export default function AppShell() {
       }
       if (!attachmentProject) await api(path, token, { method, body: JSON.stringify(body) })
       if (attachmentProject && file instanceof File && file.size) {
-        const attachment = new FormData()
-        attachment.append('file', file)
-        await api(`/projects/${attachmentProject.id}/attachment`, token, { method: 'POST', body: attachment })
+        if (import.meta.env.PROD) {
+          const blob = await uploadBlob(file.name, file, {
+            access: 'public',
+            handleUploadUrl: `${API_URL}/uploads`,
+            clientPayload: JSON.stringify({ projectId: attachmentProject.id, originalName: file.name }),
+            headers: { Authorization: `Bearer ${token}` },
+            multipart: true,
+          })
+          await api(`/projects/${attachmentProject.id}/attachment/confirm`, token, {
+            method: 'POST',
+            body: JSON.stringify({ url: blob.url, name: file.name }),
+          })
+        } else {
+          const attachment = new FormData()
+          attachment.append('file', file)
+          await api(`/projects/${attachmentProject.id}/attachment`, token, { method: 'POST', body: attachment })
+        }
       }
       setModal(''); setSelected(null); setLoading(true); setRefresh((value) => value + 1); flash('Changes saved.')
     } catch (issue) {
