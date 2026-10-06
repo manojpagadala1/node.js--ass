@@ -111,7 +111,7 @@ Create an empty Neon database and configure `DATABASE_URL` in `.env`. If the SQL
 npm run migrate:sqlite
 ```
 
-The migration preserves record IDs and relationships, copies uploaded deliverables to Vercel Blob, updates their URLs, resets Postgres ID sequences, and verifies imported row counts. It refuses to import into non-empty Neon tables. If the database still contains any of the published `studio123` demo passwords, provide a different 12-character-or-longer migration password for each affected account in `.env`; the migration replaces those password hashes before import. Keep a backup of the SQLite database and uploads until you have verified the Neon application.
+The migration preserves record IDs and relationships, copies uploaded deliverables to Vercel Blob, updates their URLs, resets Postgres ID sequences, and verifies imported row counts. It refuses to import into non-empty Neon tables. If the database still contains any of the published `studio123` demo passwords, provide a different 12-character-or-longer migration password for each affected account in `.env`; the migration replaces those password hashes before import. Deliver each replacement password to its user through a secure channel and remove the `MIGRATION_*_PASSWORD` environment variables from Vercel after the import. Keep a backup of the SQLite database and uploads until you have verified the Neon application.
 
 ### Deploy to Vercel
 
